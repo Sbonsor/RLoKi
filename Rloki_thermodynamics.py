@@ -342,45 +342,47 @@ def old_beta_energy(mu,epsilon, Psi):
 ############Checking scaling by an honest calculation
 
 
-epsilons = np.logspace(np.log10(0.01), np.log10(0.05),20)
-Psi = 5
-C_Psi = -4.962353926522837
-D_Psi = 0.6622717575010029
-alpha_c = 9.37875751503006
-kappa = 18/(5 * np.exp(Psi)*gamma(5/2)*gammainc(5/2,Psi))
+# epsilons = np.logspace(np.log10(0.01), np.log10(0.05),20)
+# Psi = 5
+# C_Psi = -4.962353926522837
+# D_Psi = 0.6622717575010029
+# alpha_c = 9.37875751503006
+# kappa = 18/(5 * np.exp(Psi)*gamma(5/2)*gammainc(5/2,Psi))
 
-betas = np.zeros(len(epsilons))
-Es = np.zeros(len(epsilons))
+# betas = np.zeros(len(epsilons))
+# Es = np.zeros(len(epsilons))
 
-for i, epsilon in enumerate(epsilons):
-    mu_c = (4*np.pi*epsilon/9) * (Psi + epsilon**2 * C_Psi + epsilon**4*np.log(epsilon) * 40 * Psi**4 * kappa)
-    betas[i], Es[i] = old_beta_energy(mu_c,epsilon, Psi)
+# for i, epsilon in enumerate(epsilons):
+#     mu_c = (4*np.pi*epsilon/9) * (Psi + epsilon**2 * C_Psi + epsilon**4*np.log(epsilon) * 40 * Psi**4 * kappa)
+#     betas[i], Es[i] = old_beta_energy(mu_c,epsilon, Psi)
     
-fig,ax = plt.subplots(1,1)
-ax.plot(epsilons, betas, marker = 'x')
-ax.set_xscale('log')
-ax.set_yscale('log')
-ax.set_xlabel('$\\epsilon$')
-ax.set_ylabel('$\\beta$')
+# fig,ax = plt.subplots(1,1)
+# ax.plot(epsilons, betas, marker = 'x')
+# ax.set_xscale('log')
+# ax.set_yscale('log')
+# ax.set_xlabel('$\\epsilon$')
+# ax.set_ylabel('$\\beta$')
 
-regression = linregress(np.log10(epsilons), np.log10(betas))
-ax.plot(epsilons, 10**(regression[0]*np.log10(epsilons) + regression[1]), color = 'r')
-ax.plot(epsilons, 10**((4/3)*np.log10(epsilons) + regression[1]), color = 'k')
-beta_scale = regression[0]
+# regression = linregress(np.log10(epsilons), np.log10(betas))
+# ax.plot(epsilons, 10**(regression[0]*np.log10(epsilons) + regression[1]), color = 'r')
+# ax.plot(epsilons, 10**((4/3)*np.log10(epsilons) + regression[1]), color = 'k')
+# beta_scale = regression[0]
 
-fig,ax = plt.subplots(1,1)
-ax.plot(epsilons, Es, marker = 'x')
-ax.set_xscale('log')
-ax.set_yscale('log')
-ax.set_xlabel('$\\epsilon$')
-ax.set_ylabel('$\\mathcal{E}$')
+# fig,ax = plt.subplots(1,1)
+# ax.plot(epsilons, Es, marker = 'x')
+# ax.set_xscale('log')
+# ax.set_yscale('log')
+# ax.set_xlabel('$\\epsilon$')
+# ax.set_ylabel('$\\mathcal{E}$')
 
-regression2 = linregress(np.log10(epsilons), np.log10(Es))
-ax.plot(epsilons, 10**(regression2[0]*np.log10(epsilons) + regression2[1]), color = 'r')
-ax.plot(epsilons, 10**((8/3)*np.log10(epsilons) + regression2[1]), color = 'k')
-E_scale = regression2[0]
+# regression2 = linregress(np.log10(epsilons), np.log10(Es))
+# ax.plot(epsilons, 10**(regression2[0]*np.log10(epsilons) + regression2[1]), color = 'r')
+# ax.plot(epsilons, 10**((8/3)*np.log10(epsilons) + regression2[1]), color = 'k')
+# E_scale = regression2[0]
 
-########## Regenerating figure 17 in LoKi paper
+# ########## Regenerating figure 17 in LoKi paper
+E_scale = 8/3
+beta_scale = 4/3
 
 fig, [ax1,ax2] = plt.subplots(2,1)
 axins1 = fig.add_axes([0.6, 0.7, 0.25, 0.15])
@@ -408,14 +410,31 @@ ax1.plot(Es, 5.77*Es**0.5, color = 'k', linestyle = '--')
 # ### Add loaded lines
 
 epsilons = [0.1, 0.05, 0.01]
-mu_epsilon = 3
+
+Psi = 5
+C_Psi = -4.962353926522837
+D_Psi = 0.6622717575010029
+alpha_c = 9.37875751503006
+kappa = 18/(5 * np.exp(Psi)*gamma(5/2)*gammainc(5/2,Psi))
+epsilon = 0.1
+mu_c = (4*np.pi*epsilon/9) * (Psi + epsilon**2 * C_Psi + epsilon**4*np.log(epsilon) * 40 * Psi**4 * kappa**2 - epsilon**4 * (alpha_c - D_Psi))
+
+mu_epsilon = mu_c/0.1
 
 for i, epsilon in enumerate(epsilons):
     
     if (i ==2):
-        a0s = np.concatenate((np.logspace(np.log10(epsilon**2), np.log10(0.11*epsilon), 200),np.linspace(0.11*epsilon, 0.12*epsilon , 500) ,np.linspace(0.12*epsilon, 25, 200)))
-    else:
-        a0s = np.concatenate((np.logspace(np.log10(epsilon**2), np.log10(0.2), 300), np.linspace(0.2, 25, 300)))
+        a0s = np.concatenate((np.logspace(np.log10(0.000503637), np.log10(0.000505208), 300),np.linspace(0.00049688, 0.12*epsilon , 300) ,np.linspace(0.12*epsilon, 25, 300)))
+        #a0s = np.logspace(np.log10(0.000503637), np.log10(0.000505208), 20)
+        #a0s = np.linspace(0.000502071, 0.000589692, 20)
+    if(i == 1):
+        a0s = np.concatenate((np.logspace(np.log10(4.9*epsilon**2), np.log10(0.255*epsilon), 300), np.linspace(0.255*epsilon, 25, 300)))
+        #a0s = np.logspace(np.log10(4.9*epsilon**2), np.log10(0.255*epsilon), 300)
+        #a0s = [25]
+    if(i == 0):
+        a0s = np.concatenate((np.logspace(np.log10(4.6*epsilon**2), np.log10(0.52*epsilon), 300), np.linspace(0.52*epsilon, 25, 300)))
+        #a0s = np.logspace(np.log10(4.6*epsilon**2), np.log10(0.52*epsilon), 300)
+        #a0s = [25]
     # a0s = np.logspace(np.log10(8*epsilon**2), np.log10(2*epsilon), 100)
     # a0s = np.linspace(0.11*epsilon,0.12*epsilon , 500)
     mu = mu_epsilon * epsilon
@@ -439,7 +458,7 @@ ax1.set_xlim(0,2)
 ax1.set_ylim(0,1.7)
 ax1.set_xlabel('$\\mathcal{E}$')
 ax1.set_ylabel('$\\beta$')
-ax1.set_title('$\\mu/\\epsilon$ = 3')
+ax1.set_title('')
 ax1.legend(loc='lower left')
 
 axins1.set_ylabel('$\\beta \\epsilon^{-4/3}$') 
@@ -487,7 +506,7 @@ ax2.set_ylim(0,2)
 classical_model_beta, classical_model_E = old_beta_energy(0,1e-6, Psi)
 ax2.scatter(classical_model_E, classical_model_beta, marker = 'x', color = 'k', label = 'Classical model')
 ax2.legend(loc = 'lower left')
-#plt.savefig('fig7_remade')
+plt.savefig('fig7_remade')
 
 ############# Checking beta/E slope with chi
      
@@ -495,7 +514,7 @@ ax2.legend(loc = 'lower left')
 # epsilon = 0.1    
 # mu = 0.1
 
-# ###### Calculatring the O(1) quantities
+# ###### Calculating the O(1) quantities
 # LoKi_model = LoKi(mu, epsilon, Psi)
 
 # M_0 = LoKi_model.M_hat * LoKi_model.density(Psi)
@@ -528,13 +547,11 @@ ax2.legend(loc = 'lower left')
 
 # #### O(chi) correction for U
 
-# integrand1 = LoKi_model.density(Psi)/9 * R1 * psi_0 * u_10 * r**2
-# integrand2 = rho_0 * u_10 * r**2
-# integrand3 = 3 * r**4 * rho_0
-# integrand4 = (9 * mu * LoKi_model.density(Psi) * R1 * u_10 * r) / (4 * np.pi * 9)
-# integral = simpson(y = integrand1 + integrand2 + integrand3 - integrand4, x = r)
+# integrand1 = LoKi_model.density(Psi) / 9 * R1 * u_10 * (psi_0 - (9 * mu)/(4*np.pi*r) ) * r**2
+# integrand2 = rho_0 * (u_10 - 3*r**2) * r**2
+# integral = simpson(y = integrand1 + integrand2, x = r)
 
-# U_1 = 0.5*(non_rotating_model.alpha_0 * M_1 + non_rotating_model.alpha_1 * M_0) - 2 * np.pi * integral
+# U_1 = 0.5 * (non_rotating_model.alpha_1 * M_0 + non_rotating_model.alpha_0 * M_1) - 2 * np.pi * integral
 # E_1 = ((-8 * np.pi**2 * LoKi_model.density(Psi)**2)/(9 * 3**(8/3)) ) * ((3*U_1*M_0 - 7*U_0*M_1) / (3 * M_0 **(10/3)))
 
 
