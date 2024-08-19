@@ -114,7 +114,7 @@ class RLoKi_asymp:
         psi0_grad = y[1] - (9 * self.mu) / (4 * np.pi * r**2)
         psi1_grad = y[3] + self.A_2 * y[5] * 0.5 * (3 * np.cos(np.pi/2)**2 - 1)
         
-        return psi0_grad + self.chi * psi1_grad - 1e-8
+        return psi0_grad + self.chi * psi1_grad - 0.1
     psi_1_crossing.terminal = True
     
                 

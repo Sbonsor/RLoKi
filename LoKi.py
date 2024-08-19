@@ -34,7 +34,7 @@ class LoKi:
     def _set_kwargs(self, mu, epsilon, Psi, **kwargs):
         
         if (Psi - 9*mu/(4*np.pi*epsilon) < 0):
-            raise ValueError(f"a_0 must not be negative:(mu,eps,Psi) = ({mu}, {epsilon}, {Psi})")
+            raise ValueError("a_0 must not be negative")
             
         self.Psi = Psi
         self.epsilon = epsilon
@@ -92,10 +92,10 @@ class LoKi:
         self.psi = poisson_solution.y[0,:]
         self.dpsi_dr = poisson_solution.y[1,:]
         self.rhat = poisson_solution.t
+        self.rt = self.rhat[-1]
         
         if(self.pot_only == False):
             
-            self.rt = self.rhat[-1]
             self.U_r = poisson_solution.y[2,:]
             self.K_r = poisson_solution.y[3,:]
             self.M_r = -self.mu-self.dpsi_dr*np.power(self.rhat,2)*(4*np.pi/9)
